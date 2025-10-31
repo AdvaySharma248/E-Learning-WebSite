@@ -1,8 +1,63 @@
+import { useState } from 'react';
 import DashboardWidget from '../components/DashboardWidget';
-import { Users, BookOpen, FileQuestion, TrendingUp } from 'lucide-react';
+import { Users, BookOpen, FileQuestion, TrendingUp, Download } from 'lucide-react';
 import { mockAnalytics } from '../utils/mockData';
+import { analyticsAPI } from '../utils/api';
 
 const AdminDashboard = () => {
+  const [exporting, setExporting] = useState({ course: false, user: false });
+
+  const handleExportCourseStats = async () => {
+    setExporting({ ...exporting, course: true });
+    try {
+      // In a real implementation, you would pass a specific course ID
+      // For demo purposes, we'll just show an alert
+      alert('In a real implementation, this would export course analytics as CSV');
+      
+      // Example of how to implement in a real app:
+      /*
+      const response = await analyticsAPI.exportCourseStats(courseId);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'course-analytics.csv');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      */
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Export failed. Please try again.');
+    } finally {
+      setExporting({ ...exporting, course: false });
+    }
+  };
+
+  const handleExportUserStats = async () => {
+    setExporting({ ...exporting, user: true });
+    try {
+      // In a real implementation, this would export user analytics as CSV
+      alert('In a real implementation, this would export user analytics as CSV');
+      
+      // Example of how to implement in a real app:
+      /*
+      const response = await analyticsAPI.exportUserStats();
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'user-analytics.csv');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      */
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Export failed. Please try again.');
+    } finally {
+      setExporting({ ...exporting, user: false });
+    }
+  };
+
   return (
     <div className="page-container">
       <div className="page-header">
@@ -10,6 +65,26 @@ const AdminDashboard = () => {
         <p className="page-description">
           Overview of platform analytics and statistics
         </p>
+      </div>
+
+      {/* Export Buttons */}
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+        <button 
+          className="btn btn-outline" 
+          onClick={handleExportCourseStats}
+          disabled={exporting.course}
+        >
+          <Download size={16} />
+          {exporting.course ? 'Exporting...' : 'Export Course Analytics (CSV)'}
+        </button>
+        <button 
+          className="btn btn-outline" 
+          onClick={handleExportUserStats}
+          disabled={exporting.user}
+        >
+          <Download size={16} />
+          {exporting.user ? 'Exporting...' : 'Export User Analytics (CSV)'}
+        </button>
       </div>
 
       {/* Stats Widgets */}

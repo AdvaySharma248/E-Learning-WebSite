@@ -59,12 +59,14 @@
   - Auto-submission on time up
   - Detailed results page
   - Answer review with correct answers
+  - Negative marking for incorrect answers
 
 - **Admin Quiz Manager** (`src/pages/AdminQuizManager.jsx`)
   - Create quizzes
   - Edit quiz settings
   - Delete quizzes
   - Configure duration and passing score
+  - Set negative marking values
 
 ### 4. Discussion Forum ✓
 - **Discussion Page** (`src/pages/Discussion.jsx`)
@@ -98,6 +100,7 @@
   - Monthly engagement chart
   - Top performing courses table
   - Visual data representation
+  - CSV export functionality for analytics
 
 ### 6. Reusable Components ✓
 - `Navbar.jsx` - Top navigation with user info
@@ -141,7 +144,7 @@
 All data is simulated in `src/utils/mockData.js`:
 - 2 demo users (Admin & Learner)
 - 3 sample courses with modules
-- 2 sample quizzes with questions
+- 2 sample quizzes with questions (including negative marking)
 - 3 discussion threads
 - Analytics data
 - Enrollment data
@@ -158,13 +161,13 @@ Three CSS files:
 `src/utils/api.js` contains:
 - Axios instance with interceptors
 - API endpoints for:
-  - Authentication
+  - Authentication (including password reset and email verification)
   - Courses
   - Modules
   - Quizzes
   - Discussions
   - Users
-  - Analytics
+  - Analytics (including CSV export)
 
 ## 📱 Responsive Breakpoints
 
@@ -213,6 +216,26 @@ Three CSS files:
 ✅ Performance optimized
 ✅ Ready for backend integration
 
+## 📈 Enhanced Features
+
+### Negative Marking System
+- Implemented in both frontend and backend
+- Configurable negative marks per question
+- Clear display of negative marking rules to users
+- Proper score calculation with negative marking
+
+### CSV Export Functionality
+- Admins can export course analytics as CSV
+- Admins can export user analytics as CSV
+- Clean, well-formatted CSV files
+- Easy to use export buttons in admin dashboard
+
+### Password Reset & Email Verification
+- Secure password reset workflow
+- Email verification for new users
+- Token-based verification system
+- Expiration times for security
+
 ## 🎓 Next Steps for Backend Integration
 
 1. Update API_BASE_URL in api.js
@@ -221,6 +244,8 @@ Three CSS files:
 4. Add file upload functionality
 5. Connect to PostgreSQL database
 6. Implement real-time features with WebSocket
+7. Set up email service for password reset and verification
+8. Implement proper error handling and logging
 
 ---
 

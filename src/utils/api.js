@@ -76,7 +76,9 @@ export const userAPI = {
 // Analytics APIs
 export const analyticsAPI = {
   getDashboard: () => api.get('/analytics/dashboard'),
-  getCourseStats: (courseId) => api.get(`/analytics/courses/${courseId}`)
+  getCourseStats: (courseId) => api.get(`/analytics/courses/${courseId}`),
+  exportCourseStats: (courseId) => api.get(`/analytics/courses/${courseId}/export`, { responseType: 'blob' }),
+  exportUserStats: () => api.get('/analytics/users/export', { responseType: 'blob' })
 };
 
 export default api;

@@ -15,6 +15,10 @@ const questionSchema = new mongoose.Schema({
   }],
   correctAnswer: {
     type: mongoose.Schema.Types.Mixed // Can be index for MCQ, boolean for true/false, or null for short answer
+  },
+  negativeMarks: {
+    type: Number,
+    default: 0 // Default to 0 (no negative marking)
   }
 });
 

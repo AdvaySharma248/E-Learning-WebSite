@@ -9,6 +9,8 @@ A modern, responsive E-Learning web application built with React, featuring role
 - Password visibility toggle
 - Input validation
 - Role-based authentication (Admin/Learner)
+- Password reset functionality
+- Email verification
 
 ### Learner Features
 - **Dashboard**: Overview of enrolled courses, progress tracking, upcoming quizzes
@@ -19,6 +21,7 @@ A modern, responsive E-Learning web application built with React, featuring role
   - Multiple question types (MCQ, True/False, Short Answer)
   - Question navigation and marking for review
   - Auto-grading with detailed results
+  - Negative marking for incorrect answers
 - **Discussion Forum**: 
   - Course-specific threads
   - Comments and likes
@@ -29,6 +32,7 @@ A modern, responsive E-Learning web application built with React, featuring role
 - **Course Management**: Create, edit, delete courses and modules
 - **Quiz Management**: Create and manage quizzes and assessments
 - **Discussion Moderation**: Monitor and moderate discussions
+- **Analytics Export**: Export course and user analytics as CSV
 
 ## 📁 Project Structure
 
@@ -70,14 +74,16 @@ src/
 
 ## 🛠️ Tech Stack
 
-- **Framework**: React 18+ with Vite
-- **Routing**: React Router DOM v6
+- **Framework**: React 19.2.0 with Vite 7.1.12
+- **Routing**: React Router DOM v7.9.5
 - **State Management**: Context API
-- **HTTP Client**: Axios
-- **Icons**: Lucide React
+- **HTTP Client**: Axios 1.13.1
+- **Icons**: Lucide React 0.548.0
 - **Styling**: Modern CSS (Custom)
 
 ## 📦 Installation
+
+### Frontend
 
 1. **Install dependencies**:
 ```bash
@@ -99,6 +105,38 @@ npm run build
 npm run preview
 ```
 
+### Backend
+
+1. **Navigate to backend directory**:
+```bash
+cd backend
+```
+
+2. **Install dependencies**:
+```bash
+npm install
+```
+
+3. **Set up environment variables**:
+Create a `.env` file in the backend directory with the following:
+```
+NODE_ENV=development
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/skillnest
+JWT_SECRET=skillnest_jwt_secret_key_here
+JWT_EXPIRE=30d
+```
+
+4. **Run development server**:
+```bash
+npm run dev
+```
+
+5. **Seed the database with sample data**:
+```bash
+node seeder.js -i
+```
+
 ## 🔐 Demo Credentials
 
 ### Admin Account
@@ -115,12 +153,14 @@ npm run preview
 - Uses Context API for global auth state
 - Persists login state in localStorage
 - Role-based route protection
+- Password reset and email verification
 
 ### Quiz System
 - **Timer**: Countdown with warning at 5 minutes
 - **Question Types**: MCQ, True/False, Short Answer
 - **Visual States**: Answered, Unanswered, Marked for Review
 - **Auto-Grading**: Immediate feedback for objective questions
+- **Negative Marking**: Deducts marks for incorrect answers
 
 ### Discussion Forum
 - **Profanity Filter**: Client-side regex-based filtering

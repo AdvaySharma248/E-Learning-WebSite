@@ -14,6 +14,7 @@ const Quiz = () => {
   const [markedForReview, setMarkedForReview] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
+  const [negativeMarksInfo, setNegativeMarksInfo] = useState({ totalNegativeMarks: 0, incorrectAnswers: 0 });
 
   useEffect(() => {
     const foundQuiz = mockQuizzes.find((q) => q.id === parseInt(id));
@@ -42,9 +43,11 @@ const Quiz = () => {
 
   const handleSubmit = () => {
     if (window.confirm('Are you sure you want to submit the quiz?')) {
-      // Calculate score
+      // Calculate score with negative marking
       let correctAnswers = 0;
+      let incorrectAnswers = 0;
       let totalObjectiveQuestions = 0;
+      let totalNegativeMarks = 0;
 
       quiz.questions.forEach((question) => {
         if (question.type !== 'short-answer') {
@@ -55,12 +58,23 @@ const Quiz = () => {
             correctAnswers++;
           } else if (question.type === 'true-false' && userAnswer === question.correctAnswer) {
             correctAnswers++;
+          } else if (userAnswer !== undefined && userAnswer !== null) {
+            // Only count as incorrect if user actually answered (not skipped)
+            incorrectAnswers++;
+            totalNegativeMarks += question.negativeMarks || 0;
           }
         }
       });
 
-      const calculatedScore = Math.round((correctAnswers / totalObjectiveQuestions) * 100);
+      // Calculate score: (correct answers * marks per question) - (incorrect answers * negative marks)
+      const marksPerQuestion = 100 / totalObjectiveQuestions;
+      const positiveScore = correctAnswers * marksPerQuestion;
+      const negativeScore = totalNegativeMarks;
+      const finalScore = Math.max(0, positiveScore - negativeScore); // Ensure score doesn't go below 0
+      
+      const calculatedScore = Math.round(finalScore);
       setScore(calculatedScore);
+      setNegativeMarksInfo({ totalNegativeMarks, incorrectAnswers });
       setSubmitted(true);
     }
   };
@@ -124,6 +138,25 @@ const Quiz = () => {
               : `You scored ${score}%. Passing score is ${quiz.passingScore}%. Try again!`}
           </p>
 
+          {/* Negative Marking Info */}
+          {negativeMarksInfo.incorrectAnswers > 0 && (
+            <div style={{ 
+              backgroundColor: '#fef3c7', 
+              border: '1px solid #f59e0b', 
+              borderRadius: '0.5rem', 
+              padding: '1rem', 
+              marginBottom: '1.5rem' 
+            }}>
+              <h3 style={{ color: '#92400e', marginBottom: '0.5rem' }}>Negative Marking Applied</h3>
+              <p style={{ color: '#92400e', marginBottom: '0.25rem' }}>
+                You had {negativeMarksInfo.incorrectAnswers} incorrect answers
+              </p>
+              <p style={{ color: '#92400e' }}>
+                Total negative marks deducted: {negativeMarksInfo.totalNegativeMarks}
+              </p>
+            </div>
+          )}
+
           {/* Answer Review */}
           <div style={{ textAlign: 'left', marginTop: '2rem' }}>
             <h3 style={{ marginBottom: '1rem' }}>Answer Review</h3>
@@ -176,6 +209,11 @@ const Quiz = () => {
                           <p style={{ fontSize: '0.875rem', color: 'var(--secondary-color)' }}>
                             <strong>Correct Answer:</strong> {question.options[question.correctAnswer]}
                           </p>
+                          {userAnswer !== undefined && userAnswer !== question.correctAnswer && question.negativeMarks > 0 && (
+                            <p style={{ fontSize: '0.875rem', color: 'var(--danger-color)', marginTop: '0.25rem' }}>
+                              ⚠️ Negative marking applied: -{question.negativeMarks} marks
+                            </p>
+                          )}
                         </div>
                       )}
                       {question.type === 'true-false' && (
@@ -187,6 +225,11 @@ const Quiz = () => {
                           <p style={{ fontSize: '0.875rem', color: 'var(--secondary-color)' }}>
                             <strong>Correct Answer:</strong> {question.correctAnswer ? 'True' : 'False'}
                           </p>
+                          {userAnswer !== undefined && userAnswer !== question.correctAnswer && question.negativeMarks > 0 && (
+                            <p style={{ fontSize: '0.875rem', color: 'var(--danger-color)', marginTop: '0.25rem' }}>
+                              ⚠️ Negative marking applied: -{question.negativeMarks} marks
+                            </p>
+                          )}
                         </div>
                       )}
                     </div>
@@ -228,6 +271,17 @@ const Quiz = () => {
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
                   {course.title}
                 </p>
+                {/* Negative Marking Info */}
+                <div style={{ 
+                  backgroundColor: '#dbeafe', 
+                  border: '1px solid #3b82f6', 
+                  borderRadius: '0.25rem', 
+                  padding: '0.5rem', 
+                  marginTop: '0.5rem',
+                  fontSize: '0.875rem'
+                }}>
+                  <strong>ℹ️ Negative Marking:</strong> Incorrect answers will deduct {question.negativeMarks || 0} marks each
+                </div>
               </div>
               <QuizTimer duration={quiz.duration} onTimeUp={handleTimeUp} />
             </div>

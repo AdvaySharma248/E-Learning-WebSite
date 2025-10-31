@@ -133,27 +133,31 @@ export const mockQuizzes = [
           'Home Tool Markup Language',
           'Hyperlinks and Text Markup Language'
         ],
-        correctAnswer: 0
+        correctAnswer: 0,
+        negativeMarks: 0.5 // 0.5 marks deducted for wrong answer
       },
       {
         id: 2,
         type: 'mcq',
         question: 'Which HTML tag is used for the largest heading?',
         options: ['<head>', '<h6>', '<heading>', '<h1>'],
-        correctAnswer: 3
+        correctAnswer: 3,
+        negativeMarks: 0.5
       },
       {
         id: 3,
         type: 'true-false',
         question: 'HTML is a programming language.',
-        correctAnswer: false
+        correctAnswer: false,
+        negativeMarks: 0.5
       },
       {
         id: 4,
         type: 'mcq',
         question: 'Which tag is used to create a hyperlink?',
         options: ['<link>', '<a>', '<href>', '<url>'],
-        correctAnswer: 1
+        correctAnswer: 1,
+        negativeMarks: 0.5
       },
       {
         id: 5,
@@ -166,20 +170,23 @@ export const mockQuizzes = [
         type: 'mcq',
         question: 'Which attribute is used to provide alternative text for an image?',
         options: ['title', 'alt', 'src', 'text'],
-        correctAnswer: 1
+        correctAnswer: 1,
+        negativeMarks: 0.5
       },
       {
         id: 7,
         type: 'true-false',
         question: 'CSS can be included directly in HTML files.',
-        correctAnswer: true
+        correctAnswer: true,
+        negativeMarks: 0.5
       },
       {
         id: 8,
         type: 'mcq',
         question: 'What is the correct HTML element for inserting a line break?',
         options: ['<break>', '<lb>', '<br>', '<newline>'],
-        correctAnswer: 2
+        correctAnswer: 2,
+        negativeMarks: 0.5
       },
       {
         id: 9,
@@ -192,7 +199,8 @@ export const mockQuizzes = [
         type: 'mcq',
         question: 'Which HTML tag is used to define an unordered list?',
         options: ['<ol>', '<ul>', '<list>', '<li>'],
-        correctAnswer: 1
+        correctAnswer: 1,
+        negativeMarks: 0.5
       }
     ]
   },
@@ -210,46 +218,52 @@ export const mockQuizzes = [
         type: 'mcq',
         question: 'Which of the following is the correct way to declare a variable in Python?',
         options: ['var x = 5', 'int x = 5', 'x = 5', 'declare x = 5'],
-        correctAnswer: 2
+        correctAnswer: 2,
+        negativeMarks: 0.5
       },
       {
         id: 2,
         type: 'true-false',
         question: 'Python is a statically typed language.',
-        correctAnswer: false
+        correctAnswer: false,
+        negativeMarks: 0.5
       },
       {
         id: 3,
         type: 'mcq',
         question: 'What is the output of: print(type([]))?',
         options: ['<class \'array\'>', '<class \'list\'>', '<class \'tuple\'>', '<class \'dict\'>'],
-        correctAnswer: 1
+        correctAnswer: 1,
+        negativeMarks: 0.5
       },
       {
         id: 4,
         type: 'short-answer',
         question: 'Explain the difference between a list and a tuple in Python.',
-        correctAnswer: null
+        correctAnswer: null // Descriptive answers not auto-graded
       },
       {
         id: 5,
         type: 'mcq',
         question: 'Which keyword is used to define a function in Python?',
         options: ['function', 'def', 'func', 'define'],
-        correctAnswer: 1
+        correctAnswer: 1,
+        negativeMarks: 0.5
       },
       {
         id: 6,
         type: 'true-false',
         question: 'Python uses indentation to define code blocks.',
-        correctAnswer: true
+        correctAnswer: true,
+        negativeMarks: 0.5
       },
       {
         id: 7,
         type: 'mcq',
         question: 'What does the len() function do?',
         options: ['Returns the length of an object', 'Deletes an object', 'Creates a list', 'Sorts a list'],
-        correctAnswer: 0
+        correctAnswer: 0,
+        negativeMarks: 0.5
       },
       {
         id: 8,

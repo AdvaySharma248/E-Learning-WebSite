@@ -7,10 +7,12 @@ This is the backend API for the SkillNest e-learning platform, built with Node.j
 - User authentication (register, login, logout)
 - Role-based access control (Admin, Learner)
 - Course management (CRUD operations)
-- Quiz system with auto-grading
+- Quiz system with auto-grading and negative marking
 - Discussion forum with comments
 - User progress tracking
 - Analytics dashboard for admins
+- Password reset and email verification
+- CSV export functionality for analytics
 
 ## Prerequisites
 
@@ -67,6 +69,9 @@ npm start
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
+- `GET /api/auth/verify-email/:token` - Verify email address
+- `POST /api/auth/forgot-password` - Request password reset
+- `PUT /api/auth/reset-password/:token` - Reset password
 
 ### Courses
 - `GET /api/courses` - Get all courses
@@ -102,6 +107,8 @@ npm start
 ### Analytics (Admin only)
 - `GET /api/analytics/dashboard` - Get dashboard analytics
 - `GET /api/analytics/courses/:courseId` - Get course-specific analytics
+- `GET /api/analytics/courses/:courseId/export` - Export course analytics as CSV
+- `GET /api/analytics/users/export` - Export user analytics as CSV
 
 ## Seeding Data
 

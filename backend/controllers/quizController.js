@@ -116,9 +116,11 @@ exports.submitQuiz = asyncHandler(async (req, res, next) => {
     });
   }
   
-  // Calculate score
+  // Calculate score with negative marking
   let correctAnswers = 0;
+  let incorrectAnswers = 0;
   let totalQuestions = quiz.questions.length;
+  let totalNegativeMarks = 0;
   
   for (let i = 0; i < totalQuestions; i++) {
     const question = quiz.questions[i];
@@ -128,6 +130,10 @@ exports.submitQuiz = asyncHandler(async (req, res, next) => {
     if (question.type === 'mcq' || question.type === 'true-false') {
       if (userAnswer === question.correctAnswer) {
         correctAnswers++;
+      } else if (userAnswer !== undefined) {
+        // Only count as incorrect if user actually answered (not skipped)
+        incorrectAnswers++;
+        totalNegativeMarks += question.negativeMarks || 0;
       }
     }
     // For short answer questions, we'll mark them as correct for now
@@ -137,7 +143,13 @@ exports.submitQuiz = asyncHandler(async (req, res, next) => {
     }
   }
   
-  const score = Math.round((correctAnswers / totalQuestions) * 100);
+  // Calculate score: (correct answers * marks per question) - (incorrect answers * negative marks)
+  const marksPerQuestion = 100 / totalQuestions;
+  const positiveScore = correctAnswers * marksPerQuestion;
+  const negativeScore = totalNegativeMarks;
+  const finalScore = Math.max(0, positiveScore - negativeScore); // Ensure score doesn't go below 0
+  
+  const score = Math.round(finalScore);
   const passed = score >= quiz.passingScore;
   
   res.status(200).json({
@@ -146,6 +158,8 @@ exports.submitQuiz = asyncHandler(async (req, res, next) => {
       score,
       passed,
       correctAnswers,
+      incorrectAnswers,
+      totalNegativeMarks,
       totalQuestions
     }
   });

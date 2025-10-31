@@ -4,6 +4,7 @@ const Quiz = require('../models/Quiz');
 const Enrollment = require('../models/Enrollment');
 const asyncHandler = require('../middleware/asyncHandler');
 const { protect, authorize } = require('../middleware/auth');
+const { jsonToCSV } = require('../utils/csvGenerator');
 
 // @desc    Get admin dashboard analytics
 // @route   GET /api/analytics/dashboard
@@ -79,4 +80,92 @@ exports.getCourseAnalytics = asyncHandler(async (req, res, next) => {
       completedCount: enrollments.filter(e => e.completed).length
     }
   });
+});
+
+// @desc    Export course analytics as CSV
+// @route   GET /api/analytics/courses/:courseId/export
+// @access  Private/Admin
+exports.exportCourseAnalytics = asyncHandler(async (req, res, next) => {
+  const course = await Course.findById(req.params.courseId);
+  
+  if (!course) {
+    return res.status(404).json({
+      success: false,
+      message: `Course not found with id of ${req.params.courseId}`
+    });
+  }
+  
+  // Get all enrollments for this course with user details
+  const enrollments = await Enrollment.find({ courseId: req.params.courseId })
+    .populate('userId', 'name email');
+  
+  // Format data for CSV
+  const csvData = enrollments.map(enrollment => ({
+    studentName: enrollment.userId.name,
+    studentEmail: enrollment.userId.email,
+    enrolledDate: enrollment.enrolledDate.toISOString().split('T')[0],
+    progress: `${enrollment.progress}%`,
+    completed: enrollment.completed ? 'Yes' : 'No',
+    completedModules: enrollment.completedModules.length
+  }));
+  
+  // Convert to CSV
+  const csv = jsonToCSV(csvData, [
+    'studentName',
+    'studentEmail',
+    'enrolledDate',
+    'progress',
+    'completed',
+    'completedModules'
+  ]);
+  
+  // Set headers for CSV download
+  res.header('Content-Type', 'text/csv');
+  res.attachment(`course-${course.title.replace(/\s+/g, '-')}-analytics.csv`);
+  return res.send(csv);
+});
+
+// @desc    Export user analytics as CSV
+// @route   GET /api/analytics/users/export
+// @access  Private/Admin
+exports.exportUserAnalytics = asyncHandler(async (req, res, next) => {
+  // Get all users with their enrollment data
+  const users = await User.find();
+  const userData = [];
+  
+  for (const user of users) {
+    const enrollments = await Enrollment.find({ userId: user._id });
+    const totalEnrollments = enrollments.length;
+    const completedCourses = enrollments.filter(e => e.completed).length;
+    
+    let averageProgress = 0;
+    if (enrollments.length > 0) {
+      const totalProgress = enrollments.reduce((sum, e) => sum + e.progress, 0);
+      averageProgress = Math.round(totalProgress / enrollments.length);
+    }
+    
+    userData.push({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      totalEnrollments,
+      completedCourses,
+      averageProgress: `${averageProgress}%`
+    });
+  }
+  
+  // Convert to CSV
+  const csv = jsonToCSV(userData, [
+    'name',
+    'email',
+    'role',
+    'totalEnrollments',
+    'completedCourses',
+    'averageProgress'
+  ]);
+  
+  // Set headers for CSV download
+  res.header('Content-Type', 'text/csv');
+  res.attachment('user-analytics.csv');
+  return res.send(csv);
 });
